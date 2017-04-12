@@ -71,9 +71,9 @@ void mappingStepperData(long sensorValue) {
     myMotor->step(mappedAudio, FORWARD, DOUBLE);
     myMotor->release();
     Serial.print(" AUDIO...");
-    Serial.print(" ULTRA: ");
+    Serial.print(" cm: ");
     Serial.print(arraySensorValues[0]);
-    Serial.print(" AUDIO: ");
+    Serial.print(" db: ");
     Serial.print(arraySensorValues[1]);
     Serial.println("");
   }
@@ -82,9 +82,9 @@ void mappingStepperData(long sensorValue) {
     myMotor->step(mappedStepper, FORWARD, DOUBLE);
     myMotor->release();
     Serial.print(" ULTRASOUND... ");
-    Serial.print(" ULTRA: ");
+    Serial.print(" cm: ");
     Serial.print(arraySensorValues[0]);
-    Serial.print(" AUDIO: ");
+    Serial.print(" db: ");
     Serial.print(arraySensorValues[1]);
     Serial.println("");
   }
