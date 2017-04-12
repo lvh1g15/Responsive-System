@@ -9,7 +9,7 @@ Adafruit_StepperMotor *myMotor = AFMS.getStepper(200, 2);
 Adafruit_StepperMotor *myMotor2 = AFMS.getStepper(32, 1);
 const int pingPin = 3;
 long cm;
-long finalUltraSoundValue;
+long finalUltraSoundValue = 0;
 
 void setup() {
   Serial.begin(9600);           // set up Serial library at 9600 bps
@@ -77,17 +77,19 @@ void runmotorAndReadSensor(int input) {
   do {
      myMotor2->step(input, FORWARD, DOUBLE);
      ultraSoundResponse();
-     finalUltraSoundValue = Serial.println(cm);
   }
   while (steps >= input);
     Serial.println("stopped");
     myMotor2->release();
+    mappingStepperData(finalUltraSoundValue);
 } 
 
 void mappingStepperData(int sensorValue) {
-
-  int mappedStepper = map(sensorValue, 0, );
-  
+  Serial.println(cm);
+  // ultrasound comes in cm but we turn into how far stepper moves between 0 and 2000
+  int mappedStepper = map(cm, 0, 315, 0, 2000);
+  myMotor->step(mappedStepper, FORWARD, DOUBLE);
+  Serial.println("motor1moving");
 }
 
 
