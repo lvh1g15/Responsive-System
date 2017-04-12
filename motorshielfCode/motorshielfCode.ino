@@ -2,7 +2,6 @@
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 
-
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
 Adafruit_StepperMotor *myMotor = AFMS.getStepper(200, 2);
 Adafruit_StepperMotor *myMotor2 = AFMS.getStepper(32, 1);
@@ -45,10 +44,7 @@ long microsecondsToCentimeters(long microseconds) {
 }
 
 void loop() {
-  for(int m=0; m<sizeof(arraySensorValues);m++) {
-    runmotorAndReaddata(100, m);
-    delay(100);
-  }
+    runmotorAndReaddata(100);
 }
 
 void microphone() {
@@ -56,37 +52,17 @@ void microphone() {
   arraySensorValues[1] = db;
 }
 
-void runmotorAndReaddata(int input, int m) { 
-  int i = 0;
-      do {
-         myMotor2->step(100, FORWARD, DOUBLE);
-         ultraSoundResponse();
-         delay(100);
-         microphone();
-         delay(100);
-      }
-      while (counter >= input);
-        counter += 1;
-        myMotor2->release();
-        delay(100);
-        mappingStepperData(arraySensorValues[m]);
+void runmotorAndReaddata(int input) { 
+  for(int m=0; m< 2; m++ ) {
+    myMotor2->step(input, FORWARD, DOUBLE);
+    ultraSoundResponse();
+    delay(100);
+    microphone();
+    delay(100);
+    myMotor2->release();
+    mappingStepperData(arraySensorValues[m]);
+  }
 }
-//
-//void runmotorAndReadAudio(int input) { 
-//
-//    do {
-//       myMotor2->step(100, FORWARD, DOUBLE);
-//       microphone();
-//       delay(100);
-//       ultraSoundResponse();
-//       delay(100);
-//    }
-//    while (counter >= input);
-//      counter += 1;
-//      myMotor2->release();
-//      delay(100);
-//      mappingStepperData(arraySensorValues[1]);
-//}
 
 void mappingStepperData(long sensorValue) {
   // ultrasound comes in cm but we turn into how far stepper moves between 0 and 2000
