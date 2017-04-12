@@ -2,14 +2,18 @@
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 
-// Create the motor shield object with the default I2C address
-Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
 
+Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
 Adafruit_StepperMotor *myMotor = AFMS.getStepper(200, 2);
 Adafruit_StepperMotor *myMotor2 = AFMS.getStepper(32, 1);
+
+
 const int pingPin = 3;
 long cm;
+long db;
 long finalUltraSoundValue = 0;
+int sensorPin = A0;
+long arraySensorValues[1] = {};
 
 void setup() {
   Serial.begin(9600);           // set up Serial library at 9600 bps
@@ -29,14 +33,11 @@ void ultraSoundResponse() {
   delayMicroseconds(1);
   digitalWrite(pingPin, HIGH);
   delayMicroseconds(1);
-
+  
   pinMode(pingPin, INPUT);
   duration = pulseIn(pingPin, HIGH);
-  
   cm = microsecondsToCentimeters(duration);
-//  if(cm < 30) {
-//    sensorResponse();
-//  }
+  arraySensorValues[0] = cm;
 }
 
 long microsecondsToCentimeters(long microseconds) {
@@ -49,29 +50,41 @@ delay(1000);
 
 }
 
+void microphone() {
+  db = analogRead(sensorPin);
+  arraySensorValues[1] = db;
+}
+
 void runmotorAndReadSensor(int input) { 
   int i = 0;
-  int steps = 0;
-  for(int i; i < input; i++) {
-    steps = steps + i;
-  }
-
-  do {
-     myMotor2->step(input, FORWARD, DOUBLE);
-     ultraSoundResponse();
-  }
-  while (steps >= input);
-    Serial.println("stopped");
-    myMotor2->release();
-    mappingStepperData(finalUltraSoundValue);
-} 
+  int m = 0;
+    for(int i; i < input; i++) {
+      do {
+         myMotor2->step(input, FORWARD, DOUBLE);
+         ultraSoundResponse();
+         microphone();
+      }
+      while (i >= input);
+        myMotor2->release();
+        mappingStepperData(arraySensorValues[m]);
+     } 
+}
 
 void mappingStepperData(int sensorValue) {
-  Serial.println(cm);
   // ultrasound comes in cm but we turn into how far stepper moves between 0 and 2000
-  int mappedStepper = map(cm, 0, 315, 0, 2000);
-  myMotor->step(mappedStepper, FORWARD, DOUBLE);
-  Serial.println("motor1moving");
+  if(sensorValue > 315) {
+    int mappedAudio = map(sensorValue, 450, 800, 0, 2000);
+    myMotor->step(mappedAudio, FORWARD, DOUBLE);
+  }
+  else {
+    int mappedStepper = map(sensorValue, 0, 315, 0, 2000);
+    myMotor->step(mappedStepper, FORWARD, DOUBLE);
+    Serial.print(" cm: ");
+    Serial.print(cm);
+    Serial.print(", db: ");
+    Serial.print(db);
+    Serial.println("");
+  }
 }
 
 
