@@ -44,27 +44,9 @@ long microsecondsToCentimeters(long microseconds) {
 }
 
 void loop() {
-//  myMotor->step(1000, FORWARD, DOUBLE); 
-//  myMotor2->step(100, FORWARD, DOUBLE);
-//  delay(100);
-//  myMotor2->step(100, BACKWARD, DOUBLE);
-//  delay(100);
 runmotorAndReadSensor(100);
 delay(1000);
-//    
-//    ultraSoundResponse();
-//
-//  Serial.println("Double coil steps");
-//  myMotor->step(100, FORWARD, DOUBLE); 
-//  myMotor->step(100, BACKWARD, DOUBLE);
-//  
-//  Serial.println("Interleave coil steps");
-//  myMotor->step(100, FORWARD, INTERLEAVE); 
-//  myMotor->step(100, BACKWARD, INTERLEAVE); 
-//  
-//  Serial.println("Microstep steps");
-//  myMotor->step(50, FORWARD, MICROSTEP); 
-//  myMotor->step(50, BACKWARD, MICROSTEP);
+
 }
 
 void runmotorAndReadSensor(int input) { 
