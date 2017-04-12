@@ -34,10 +34,10 @@ void setup()
 
 void loop()
 {
-//  ultraSoundResponse();
-//    rotate(10);
-//    delay(10);
-//    minimaxCalc(100);
+  ultraSoundResponse();
+    rotate(10);
+    delay(10);
+    minimaxCalc(100);
       rotate(-10);
       
     delay(50);
