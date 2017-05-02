@@ -66,7 +66,6 @@ void runmotorAndReaddata(int input) {
   int x = 1;
   for(int m=0; m > -1; m = m + x) {
     Serial.println(m);
-    
     if(m==2) x = -1;
     if(m==0) x = 1;
     if(x > 0) {
@@ -100,47 +99,22 @@ void mappingStepperData(long sensorValue, int arrayIndex) {
 if(arrayIndex == 0) {
     Serial.println(" ULTRASOUND... ");
     Serial.println(arraySensorValues[0]);
-    long mappedStepper = map(sensorValue, 0, 315, 0, 500);
+    long mappedStepper = map(sensorValue, 0, 315, 0, 350);
     myMotor->step(mappedStepper, FORWARD, DOUBLE);
     myMotor->release();
 } else if(arrayIndex == 1) {
     Serial.println(" AUDIO...");
     Serial.println(arraySensorValues[1]);
-    long mappedAudio = map(sensorValue, 250, 800, 0, 500);
+    long mappedAudio = map(sensorValue, 250, 800, 0, 350);
     myMotor->step(mappedAudio, FORWARD, DOUBLE);
     myMotor->release();
 } else {
     Serial.println(" LIGHT... ");
     Serial.println(arraySensorValues[2]);
-    long mappedLuxreading = map(sensorValue, 100, 1100, 500, 0);
+    long mappedLuxreading = map(sensorValue, 100, 1100, 350, 0);
     myMotor->step(mappedLuxreading, FORWARD, DOUBLE);
     myMotor->release();
 }
-
-
-//  if(sensorValue > 315) {
-//    long mappedAudio = map(sensorValue, 450, 800, 0, 1300);
-//    myMotorstep(mappedAudio, FORWARD, DOUBLE);
-//    myMotor->release();
-//    Serial.print(" AUDIO...");
-//    Serial.print(" cm: ");
-//    Serial.print(arraySensorValues[0]);
-//    Serial.print(" db: ");
-//    Serial.print(arraySensorValues[1]);
-//    Serial.println("");
-//  }
-//  else {
-//    long mappedStepper = map(sensorValue, 0, 315, 0, 1300);
-//    myMotor->step(mappedStepper, FORWARD, DOUBLE);
-//    myMotor->release();
-//    Serial.print(" ULTRASOUND... ");
-//    Serial.print(" cm: ");
-//    Serial.print(arraySensorValues[0]);
-//    Serial.print(" db: ");
-//    Serial.print(arraySensorValues[1]);
-//    Serial.println("");
-//  }
 }
-
 
 
