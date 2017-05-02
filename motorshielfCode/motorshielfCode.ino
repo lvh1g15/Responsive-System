@@ -47,7 +47,7 @@ long microsecondsToCentimeters(long microseconds) {
 
 void loop() {
 //  for(int i = 0l; i < sizeof(arraySensorValues)) {
-    runmotorAndReaddata(60);
+    runmotorAndReaddata(120);
 //  }
 }
 
