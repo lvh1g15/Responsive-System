@@ -4,7 +4,7 @@
 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
 Adafruit_StepperMotor *myMotor = AFMS.getStepper(200, 2);
-Adafruit_StepperMotor *myMotor2 = AFMS.getStepper(32, 1);
+Adafruit_StepperMotor *myMotor2 = AFMS.getStepper(200, 1);
 
 int counter = 0;
 const int pingPin = 3;
@@ -24,7 +24,7 @@ void setup() {
   AFMS.begin();  // OR with a different frequency, say 1KHz
   
   myMotor->setSpeed(100);  // 10 rpm   
-  myMotor2->setSpeed(200);
+  myMotor2->setSpeed(100);
 }
 
 void ultraSoundResponse() {
@@ -46,12 +46,15 @@ long microsecondsToCentimeters(long microseconds) {
 }
 
 void loop() {
-    runmotorAndReaddata(100);
+//  for(int i = 0l; i < sizeof(arraySensorValues)) {
+    runmotorAndReaddata(60);
+//  }
 }
 
 void microphone() {
   db = analogRead(sensorPin);
   arraySensorValues[1] = db;
+  Serial.println(db);
 }
 
 void ldr() {
@@ -60,16 +63,34 @@ void ldr() {
 }
 
 void runmotorAndReaddata(int input) { 
-  for(int m=0; m< 3; m++ ) {
-    myMotor2->step(input, FORWARD, DOUBLE);
-    ultraSoundResponse();
-    delay(100);
-    microphone();
-    delay(100);
-    ldr();
-    delay(100);
-    myMotor2->release();
-    mappingStepperData(arraySensorValues[m], m);
+  int x = 1;
+  for(int m=0; m > -1; m = m + x) {
+    Serial.println(m);
+    
+    if(m==2) x = -1;
+    if(m==0) x = 1;
+    if(x > 0) {
+      myMotor2->step(input, FORWARD, DOUBLE);
+      ultraSoundResponse();
+      delay(100);
+      microphone();
+      delay(100);
+      ldr();
+      delay(100);
+      myMotor2->release();
+      mappingStepperData(arraySensorValues[m], m);
+    }
+    if(x < 0) {
+      myMotor2->step(input, BACKWARD, DOUBLE);
+      ultraSoundResponse();
+      delay(100);
+      microphone();
+      delay(100);
+      ldr();
+      delay(100);
+      myMotor2->release();
+      mappingStepperData(arraySensorValues[m], m);
+    }
   }
 }
 
@@ -79,19 +100,19 @@ void mappingStepperData(long sensorValue, int arrayIndex) {
 if(arrayIndex == 0) {
     Serial.println(" ULTRASOUND... ");
     Serial.println(arraySensorValues[0]);
-    long mappedStepper = map(sensorValue, 0, 315, 0, 1300);
+    long mappedStepper = map(sensorValue, 0, 315, 0, 500);
     myMotor->step(mappedStepper, FORWARD, DOUBLE);
     myMotor->release();
 } else if(arrayIndex == 1) {
     Serial.println(" AUDIO...");
     Serial.println(arraySensorValues[1]);
-    long mappedAudio = map(sensorValue, 400, 800, 0, 1300);
+    long mappedAudio = map(sensorValue, 250, 800, 0, 500);
     myMotor->step(mappedAudio, FORWARD, DOUBLE);
     myMotor->release();
 } else {
     Serial.println(" LIGHT... ");
     Serial.println(arraySensorValues[2]);
-    long mappedLuxreading = map(sensorValue, 100, 1100, 1300, 0);
+    long mappedLuxreading = map(sensorValue, 100, 1100, 500, 0);
     myMotor->step(mappedLuxreading, FORWARD, DOUBLE);
     myMotor->release();
 }
@@ -99,7 +120,7 @@ if(arrayIndex == 0) {
 
 //  if(sensorValue > 315) {
 //    long mappedAudio = map(sensorValue, 450, 800, 0, 1300);
-//    myMotor->step(mappedAudio, FORWARD, DOUBLE);
+//    myMotorstep(mappedAudio, FORWARD, DOUBLE);
 //    myMotor->release();
 //    Serial.print(" AUDIO...");
 //    Serial.print(" cm: ");
