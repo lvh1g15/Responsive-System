@@ -101,7 +101,7 @@ void mappingStepperData(long sensorValue, int arrayIndex) {
 if(arrayIndex == 0) {
     Serial.println(" ULTRASOUND... ");
     Serial.println(arraySensorValues[0]);
-    long mappedStepper = map(sensorValue, 0, 60, 50, 0);
+    long mappedStepper = map(sensorValue, 0, 315, 50, 0);
     myMotor->step(mappedStepper, FORWARD, DOUBLE);
     myMotor->release();
     delay(100);
