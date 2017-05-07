@@ -47,7 +47,7 @@ long microsecondsToCentimeters(long microseconds) {
 
 void loop() {
 //  for(int i = 0l; i < sizeof(arraySensorValues)) {
-    runmotorAndReaddata(120);
+    runmotorAndReaddata(121);
 //  }
 }
 
@@ -76,8 +76,9 @@ void runmotorAndReaddata(int input) {
       delay(100);
       ldr();
       delay(100);
-      myMotor2->release();
       mappingStepperData(arraySensorValues[m], m);
+      myMotor2->release();
+      delay(100);
     }
     if(x < 0) {
       myMotor2->step(input, BACKWARD, DOUBLE);
@@ -87,8 +88,9 @@ void runmotorAndReaddata(int input) {
       delay(100);
       ldr();
       delay(100);
-      myMotor2->release();
       mappingStepperData(arraySensorValues[m], m);
+      myMotor2->release();
+      delay(100);
     }
   }
 }
@@ -99,22 +101,50 @@ void mappingStepperData(long sensorValue, int arrayIndex) {
 if(arrayIndex == 0) {
     Serial.println(" ULTRASOUND... ");
     Serial.println(arraySensorValues[0]);
-    long mappedStepper = map(sensorValue, 0, 315, 0, 350);
+    long mappedStepper = map(sensorValue, 0, 60, 50, 0);
     myMotor->step(mappedStepper, FORWARD, DOUBLE);
     myMotor->release();
+    delay(100);
 } else if(arrayIndex == 1) {
     Serial.println(" AUDIO...");
     Serial.println(arraySensorValues[1]);
-    long mappedAudio = map(sensorValue, 250, 800, 0, 350);
-    myMotor->step(mappedAudio, FORWARD, DOUBLE);
-    myMotor->release();
+
+    if(sensorValue > 800){
+      myMotor->step(50, FORWARD, DOUBLE);
+      myMotor->release();
+      delay(100);
+    }
+
+    if(sensorValue < 250){
+//      long mappedAudio = map(sensorValue, 250, 800, 0, 50);
+//      myMotor->step(0, FORWARD, DOUBLE);
+//      myMotor->release();
+      delay(100);
+    }else{
+      long mappedAudio = map(sensorValue, 250, 800, 0, 50);
+      myMotor->step(mappedAudio, FORWARD, DOUBLE);
+      myMotor->release();
+      delay(100);
+    }
+    
 } else {
     Serial.println(" LIGHT... ");
     Serial.println(arraySensorValues[2]);
-    long mappedLuxreading = map(sensorValue, 100, 1100, 350, 0);
+    long mappedLuxreading = map(sensorValue, 100, 1100, 50, 0);
     myMotor->step(mappedLuxreading, FORWARD, DOUBLE);
     myMotor->release();
+    delay(100);
+    
+   }
 }
-}
+
+
+
+
+
+
+
+
+
 
 
